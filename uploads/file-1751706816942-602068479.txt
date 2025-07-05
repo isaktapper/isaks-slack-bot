@@ -1,0 +1,7 @@
+This is a sample text file to test our API's functionality. It contains multiple sentences that will be processed and split into chunks. The API will extract this text, split it into chunks of approximately 1000 characters with 200 character overlap, and generate embeddings for each chunk using OpenAI's text-embedding-3-small model.
+
+Let's add some more content to ensure we get multiple chunks. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Here's another paragraph with different content. The chunking algorithm should try to break at natural sentence boundaries when possible. This helps maintain context and readability of the chunks. When processing documents, it's important to preserve semantic meaning while splitting the text into manageable pieces.
+
+And one final paragraph to ensure we have enough text to demonstrate the chunking functionality. The API will process this text file, along with PDFs and DOCX files. Each chunk will receive its own embedding vector, which can later be used for semantic search, document comparison, or other natural language processing tasks. 
