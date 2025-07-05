@@ -1,23 +1,21 @@
-# File Upload, Parse, and Embed API
+# AI-Powered Slack Bot
 
-A simple Express.js API that handles file uploads, text extraction, and text embeddings for PDF, DOCX, and TXT files.
+A Slack bot that uses OpenAI and Supabase to provide document Q&A capabilities through slash commands.
 
 ## Features
 
-- File upload endpoint at `/api/upload`
-- Supports .pdf, .docx, and .txt files
-- Automatic text extraction from uploaded files
-- Text chunking with configurable size and overlap
-- Text embeddings using OpenAI's text-embedding-3-small model
-- File size limit: 5MB
-- Temporary storage in local `uploads/` folder
-- Unique filename generation to prevent conflicts
+- File upload and processing (PDF, DOCX, TXT)
+- Document chunking and embedding using OpenAI
+- Semantic search using Supabase's vector similarity
+- Slack slash command integration for asking questions
+- GPT-4 powered answers based on document context
 
 ## Setup
 
-1. Create a `.env` file in the root directory with your OpenAI API key:
-```
-OPENAI_API_KEY=your_api_key_here
+1. Clone the repository:
+```bash
+git clone https://github.com/isaktapper/isaks-slack-bot.git
+cd isaks-slack-bot
 ```
 
 2. Install dependencies:
@@ -25,80 +23,38 @@ OPENAI_API_KEY=your_api_key_here
 npm install
 ```
 
-3. Start the server:
+3. Create a `.env.local` file with the following variables:
+```
+OPENAI_API_KEY=your_openai_api_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+4. Start the server:
 ```bash
-npm start
+node src/app.js
 ```
 
-For development with auto-reload:
-```bash
-npm run dev
-```
+## API Endpoints
 
-The server will start on port 3000 by default. You can change this by setting the `PORT` environment variable.
+- `POST /api/upload` - Upload and process documents
+- `POST /api/ask` - Ask questions about uploaded documents
+- `POST /api/slack/ask` - Slack slash command endpoint for questions
 
-## API Usage
+## Environment Variables
 
-### Upload, Parse, and Embed File
+- `OPENAI_API_KEY` - Your OpenAI API key
+- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `PORT` - Server port (default: 3000)
 
-**Endpoint:** POST `/api/upload`
+## Slack Integration
 
-**Request:**
-- Method: POST
-- Content-Type: multipart/form-data
-- Field name: `file`
-- Supported file types: .pdf, .docx, .txt
-- Maximum file size: 5MB
+1. Create a new Slack app
+2. Add a slash command (e.g., `/ask`)
+3. Set the command URL to `https://your-domain/api/slack/ask`
+4. Install the app to your workspace
 
-**Example using curl:**
-```bash
-curl -X POST -F "file=@/path/to/your/file.pdf" http://localhost:3000/api/upload
-```
+## License
 
-**Success Response:**
-```json
-{
-    "message": "File uploaded, parsed, and embedded successfully",
-    "file": {
-        "filename": "file-1234567890-123456789.pdf",
-        "originalName": "example.pdf",
-        "size": 1234567,
-        "path": "uploads/file-1234567890-123456789.pdf"
-    },
-    "chunks": [
-        {
-            "chunk": "Text content of the first chunk...",
-            "embedding": [0.123, -0.456, ...]
-        },
-        {
-            "chunk": "Text content of the second chunk...",
-            "embedding": [-0.789, 0.012, ...]
-        }
-    ]
-}
-```
-
-**Error Responses:**
-- 400: Invalid file type or no file uploaded
-- 413: File too large
-- 500: Server error (including parsing or embedding errors)
-
-## Processing Details
-
-The API processes files in the following steps:
-
-1. **File Parsing:**
-   - PDF files: Uses pdf-parse to extract text content
-   - DOCX files: Uses mammoth to extract raw text
-   - TXT files: Reads the file directly as UTF-8 text
-
-2. **Text Chunking:**
-   - Splits text into ~1000 character chunks
-   - Includes 200 character overlap between chunks
-   - Attempts to break at natural sentence boundaries
-   - Preserves word boundaries
-
-3. **Text Embedding:**
-   - Uses OpenAI's text-embedding-3-small model
-   - Generates embeddings for each text chunk
-   - Returns both chunks and their embeddings in the response 
+MIT 
